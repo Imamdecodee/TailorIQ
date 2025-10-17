@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TailorIQ - Upload Photos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #008080; /* Teal */
+            --secondary: #D4AF37; /* Gold */
+            --light: #F8F9FA;
+            --dark: #343A40;
+            --gray: #6C757D;
+            --white: #FFFFFF;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ee 100%);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            padding: 20px 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .logo-text span {
+            color: var(--primary);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            color: var(--primary);
+        }
+
+        /* Main Content */
+        .upload-container {
+            padding: 60px 0;
+            min-height: calc(100vh - 120px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .page-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .instructions {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .instructions-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 128, 128, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .instructions-content h3 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .instructions-content ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .instructions-content li {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--gray);
+        }
+
+        .instructions-content i {
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .upload-box {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            transition: var(--transition);
+            border: 2px dashed #e0e0e0;
+        }
+
+        .upload-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-box.active {
+            border-color: var(--primary);
+        }
+
+        .upload-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 128, 128, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--primary);
+            font-size: 32px;
+        }
+
+        .upload-box h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .upload-box p {
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 16px;
+        }
+
+        .upload-btn:hover {
+            background: #006666;
+            transform: translateY(-2px);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .silhouette {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            opacity: 0.05;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .preview-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .preview-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .preview-title {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+            text-align: left;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+
+        .preview-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .preview-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .preview-btn.retake {
+            background: var(--white);
+            color: var(--dark);
+            border: 1px solid #e0e0e0;
+        }
+
+        .preview-btn.retake:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .preview-btn.remove {
+            background: #f8f9fa;
+            color: #e74c3c;
+            border: 1px solid #e0e0e0;
+        }
+
+        .preview-btn.remove:hover {
+            background: #e74c3c;
+            color: var(--white);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-bottom: 40px;
+            display: none;
+        }
+
+        .progress-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .progress-title {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .progress-percent {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 14px rgba(0, 128, 128, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: #006666;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(0, 128, 128, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background-color: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background-color: var(--white);
+            color: var(--dark);
+            border: 2px solid #e0e0e0;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .privacy-notice {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .privacy-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .privacy-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            padding: 30px;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .modal-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 128, 128, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .modal-body {
+            margin-bottom: 30px;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--dark);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .upload-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .page-title h1 {
+                font-size: 2rem;
+            }
+            
+            .instructions-content ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .upload-container {
+                padding: 40px 0;
+            }
+            
+            .upload-box {
+                padding: 20px;
+            }
+            
+            .instructions {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-ruler-combined logo-icon"></i>
+                    <div class="logo-text">Tailor<span>IQ</span></div>
+                </div>
+                <a href="index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="upload-container">
+                <div class="page-title">
+                    <h1>Upload Your Photos</h1>
+                    <p>For the most accurate measurements, please follow the instructions below</p>
+                </div>
+
+                <!-- Instructions -->
+                <div class="instructions">
+                    <div class="instructions-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="instructions-content">
+                        <h3>Photo Guidelines</h3>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Stand 2 meters away from camera</li>
+                            <li><i class="fas fa-check-circle"></i> Use a plain, contrasting background</li>
+                            <li><i class="fas fa-check-circle"></i> Wear form-fitting clothing</li>
+                            <li><i class="fas fa-check-circle"></i> Keep arms relaxed at your sides</li>
+                            <li><i class="fas fa-check-circle"></i> Ensure good lighting</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Upload Section -->
+                <div class="upload-section">
+                    <!-- Front View Upload -->
+                    <div class="upload-box" id="front-box">
+                        <div class="silhouette">
+                            <svg viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M50,10 C60,10 65,25 65,40 C65,55 60,70 50,70 C40,70 35,55 35,40 C35,25 40,10 50,10 Z" fill="currentColor"/>
+                                <path d="M35,70 L35,150 C35,160 40,170 50,170 C60,170 65,160 65,150 L65,70" fill="currentColor"/>
+                                <path d="M25,120 L35,110" stroke="currentColor" stroke-width="3" fill="none"/>
+                                <path d="M75,120 L65,110" stroke="currentColor" stroke-width="3" fill="none"/>
+                                <path d="M25,180 L35,170" stroke="currentColor" stroke-width="3" fill="none"/>
+                                <path d="M75,180 L65,170" stroke="currentColor" stroke-width="3" fill="none"/>
+                            </svg>
+                        </div>
+                        <div class="upload-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3>Front View</h3>
+                        <p>Upload a clear photo of your front view</p>
+                        <input type="file" id="front-input" class="file-input" accept=".jpg,.jpeg,.png">
+                        <button class="upload-btn" id="front-btn">
+                            <i class="fas fa-upload"></i>
+                            Upload Photo
+                        </button>
+
+                        <!-- Preview for Front View -->
+                        <div class="preview-container" id="front-preview">
+                            <p class="preview-title">Front View Preview:</p>
+                            <div class="preview-image">
+                                <img id="front-preview-img" src="" alt="Front view preview">
+                            </div>
+                            <div class="preview-actions">
+                                <button class="preview-btn retake" data-type="front">
+                                    <i class="fas fa-camera"></i>
+                                    Retake
+                                </button>
+                                <button class="preview-btn remove" data-type="front">
+                                    <i class="fas fa-trash"></i>
+                                    Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Side View Upload -->
+                    <div class="upload-box" id="side-box">
+                        <div class="silhouette">
+                            <svg viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M60,10 C70,10 75,25 75,40 C75,55 70,70 60,70 C50,70 45,55 45,40 C45,25 50,10 60,10 Z" fill="currentColor"/>
+                                <path d="M45,70 L45,150 C45,160 50,170 60,170 C70,170 75,160 75,150 L75,70" fill="currentColor"/>
+                                <path d="M35,120 L45,110" stroke="currentColor" stroke-width="3" fill="none"/>
+                                <path d="M35,180 L45,170" stroke="currentColor" stroke-width="3" fill="none"/>
+                            </svg>
+                        </div>
+                        <div class="upload-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3>Side View</h3>
+                        <p>Upload a clear photo of your side view</p>
+                        <input type="file" id="side-input" class="file-input" accept=".jpg,.jpeg,.png">
+                        <button class="upload-btn" id="side-btn">
+                            <i class="fas fa-upload"></i>
+                            Upload Photo
+                        </button>
+
+                        <!-- Preview for Side View -->
+                        <div class="preview-container" id="side-preview">
+                            <p class="preview-title">Side View Preview:</p>
+                            <div class="preview-image">
+                                <img id="side-preview-img" src="" alt="Side view preview">
+                            </div>
+                            <div class="preview-actions">
+                                <button class="preview-btn retake" data-type="side">
+                                    <i class="fas fa-camera"></i>
+                                    Retake
+                                </button>
+                                <button class="preview-btn remove" data-type="side">
+                                    <i class="fas fa-trash"></i>
+                                    Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-container" id="progress-container">
+                    <div class="progress-header">
+                        <span class="progress-title">Processing Images</span>
+                        <span class="progress-percent" id="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" id="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                        Back
+                    </button>
+                    <button class="btn btn-primary" id="next-btn" disabled>
+                        <i class="fas fa-ruler"></i>
+                        Get Measurements
+                    </button>
+                </div>
+
+                <!-- Privacy Notice -->
+                <div class="privacy-notice">
+                    <p>By uploading photos, you agree to our <a class="privacy-link" id="privacy-link">Privacy Policy</a>. Your images are only used for size estimation and are deleted after processing.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Privacy Modal -->
+    <div class="modal" id="privacy-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h2 class="modal-title">Privacy & Data Usage</h2>
+            </div>
+            <div class="modal-body">
+                <p>At TailorIQ, we take your privacy seriously. Here's how we handle your data:</p>
+                <ul style="margin: 15px 0; padding-left: 20px;">
+                    <li>Your photos are used exclusively for body measurement estimation</li>
+                    <li>All images are processed on secure servers and encrypted during transmission</li>
+                    <li>Photos are automatically deleted after measurements are generated (within 24 hours)</li>
+                    <li>We do not store personally identifiable information with your images</li>
+                    <li>Your data is never shared with third parties without your explicit consent</li>
+                </ul>
+                <p>For more details, please review our full <a href="#" style="color: var(--primary);">Privacy Policy</a>.</p>
+            </div>
+            <button class="btn btn-primary" id="modal-understand" style="width: 100%;">
+                <i class="fas fa-check"></i>
+                I Understand
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const frontBox = document.getElementById('front-box');
+        const sideBox = document.getElementById('side-box');
+        const frontInput = document.getElementById('front-input');
+        const sideInput = document.getElementById('side-input');
+        const frontBtn = document.getElementById('front-btn');
+        const sideBtn = document.getElementById('side-btn');
+        const frontPreview = document.getElementById('front-preview');
+        const sidePreview = document.getElementById('side-preview');
+        const frontPreviewImg = document.getElementById('front-preview-img');
+        const sidePreviewImg = document.getElementById('side-preview-img');
+        const nextBtn = document.getElementById('next-btn');
+        const backBtn = document.getElementById('back-btn');
+        const progressContainer = document.getElementById('progress-container');
+        const progressFill = document.getElementById('progress-fill');
+        const progressPercent = document.getElementById('progress-percent');
+        const privacyLink = document.getElementById('privacy-link');
+        const privacyModal = document.getElementById('privacy-modal');
+        const modalClose = document.getElementById('modal-close');
+        const modalUnderstand = document.getElementById('modal-understand');
+        const retakeButtons = document.querySelectorAll('.preview-btn.retake');
+        const removeButtons = document.querySelectorAll('.preview-btn.remove');
+
+        // Track uploaded files
+        let frontFile = null;
+        let sideFile = null;
+
+        // Event Listeners for Upload Buttons
+        frontBtn.addEventListener('click', () => frontInput.click());
+        sideBtn.addEventListener('click', () => sideInput.click());
+
+        // Handle Front View Upload
+        frontInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                const file = e.target.files[0];
+                if (validateFile(file)) {
+                    frontFile = file;
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        frontPreviewImg.src = e.target.result;
+                        frontPreview.classList.add('active');
+                        frontBox.classList.add('active');
+                        checkIfReady();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+
+        // Handle Side View Upload
+        sideInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                const file = e.target.files[0];
+                if (validateFile(file)) {
+                    sideFile = file;
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        sidePreviewImg.src = e.target.result;
+                        sidePreview.classList.add('active');
+                        sideBox.classList.add('active');
+                        checkIfReady();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+
+        // Retake Buttons
+        retakeButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const type = e.target.closest('.preview-btn').getAttribute('data-type');
+                if (type === 'front') {
+                    frontInput.click();
+                } else if (type === 'side') {
+                    sideInput.click();
+                }
+            });
+        });
+
+        // Remove Buttons
+        removeButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const type = e.target.closest('.preview-btn').getAttribute('data-type');
+                if (type === 'front') {
+                    frontFile = null;
+                    frontPreview.classList.remove('active');
+                    frontBox.classList.remove('active');
+                    frontInput.value = '';
+                } else if (type === 'side') {
+                    sideFile = null;
+                    sidePreview.classList.remove('active');
+                    sideBox.classList.remove('active');
+                    sideInput.value = '';
+                }
+                checkIfReady();
+            });
+        });
+
+        // Next Button - Process Images
+        nextBtn.addEventListener('click', () => {
+            if (frontFile && sideFile) {
+                // Show progress bar
+                progressContainer.classList.add('active');
+                
+                // Simulate processing with progress animation
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 10;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                        
+                        // Redirect to measurement page after a short delay
+                        setTimeout(() => {
+                            alert('Processing complete! Redirecting to measurement results...');
+                            // In a real app, you would redirect to the measurement page
+                             window.location.href = 'measurements.html';
+                        }, 500);
+                    }
+                    
+                    progressFill.style.width = `${progress}%`;
+                    progressPercent.textContent = `${Math.round(progress)}%`;
+                }, 200);
+            }
+        });
+
+        // Back Button
+        backBtn.addEventListener('click', () => {
+            window.history.back();
+        });
+
+        // Privacy Modal
+        privacyLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            privacyModal.classList.add('active');
+        });
+
+        modalClose.addEventListener('click', () => {
+            privacyModal.classList.remove('active');
+        });
+
+        modalUnderstand.addEventListener('click', () => {
+            privacyModal.classList.remove('active');
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === privacyModal) {
+                privacyModal.classList.remove('active');
+            }
+        });
+
+        // Helper Functions
+        function validateFile(file) {
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            if (!validTypes.includes(file.type)) {
+                alert('Please upload a valid image file (JPG, JPEG, or PNG)');
+                return false;
+            }
+            
+            if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                alert('File size must be less than 5MB');
+                return false;
+            }
+            
+            return true;
+        }
+
+        function checkIfReady() {
+            if (frontFile && sideFile) {
+                nextBtn.disabled = false;
+            } else {
+                nextBtn.disabled = true;
+            }
+        }
+
+        // Camera access for mobile devices
+        function initCameraAccess() {
+            // In a real app, you would implement camera access here
+            console.log('Camera access would be implemented here for mobile devices');
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initCameraAccess();
+        });
+    </script>
+</body>
+</html>

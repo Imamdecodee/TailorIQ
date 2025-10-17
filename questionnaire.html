@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TailorIQ - Style Preferences</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #008080; /* Teal */
+            --secondary: #D4AF37; /* Gold */
+            --light: #F8F9FA;
+            --dark: #343A40;
+            --gray: #6C757D;
+            --white: #FFFFFF;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ee 100%);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            padding: 20px 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .logo-text span {
+            color: var(--primary);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            color: var(--primary);
+        }
+
+        /* Main Content */
+        .questionnaire-container {
+            padding: 60px 0;
+            min-height: calc(100vh - 120px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .page-subtitle {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        /* Progress Indicator */
+        .progress-container {
+            max-width: 600px;
+            margin: 0 auto 50px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .progress-title {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .progress-step {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 60%; /* Step 3 of 5 */
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Questionnaire Card */
+        .questionnaire-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .questionnaire-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .questionnaire-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .questionnaire-subtitle {
+            color: var(--gray);
+        }
+
+        /* Form Styles */
+        .questionnaire-form {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .question-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .question-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .question-label i {
+            color: var(--primary);
+        }
+
+        .optional {
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-weight: 400;
+        }
+
+        /* Radio Button Groups */
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .radio-option {
+            position: relative;
+        }
+
+        .radio-input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .radio-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 15px;
+            background: var(--light);
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            height: 100%;
+        }
+
+        .radio-label:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary);
+        }
+
+        .radio-input:checked + .radio-label {
+            background: rgba(0, 128, 128, 0.05);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .radio-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--gray);
+            transition: var(--transition);
+        }
+
+        .radio-input:checked + .radio-label .radio-icon {
+            color: var(--primary);
+        }
+
+        .radio-text {
+            font-weight: 500;
+        }
+
+        /* Select Input */
+        .select-group {
+            position: relative;
+        }
+
+        .select-input {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            background: var(--white);
+            appearance: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .select-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.1);
+        }
+
+        .select-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            pointer-events: none;
+        }
+
+        /* Color Picker */
+        .color-picker-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .color-input {
+            width: 60px;
+            height: 50px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: var(--light);
+        }
+
+        .color-text-input {
+            flex: 1;
+            padding: 14px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .color-text-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.1);
+        }
+
+        /* Budget Range */
+        .budget-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .budget-range {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #e0e0e0;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .budget-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .budget-range::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.2);
+        }
+
+        .budget-labels {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .budget-value {
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 5px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 14px rgba(0, 128, 128, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: #006666;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(0, 128, 128, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background-color: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background-color: var(--white);
+            color: var(--dark);
+            border: 2px solid #e0e0e0;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Success Message */
+        .success-message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(46, 204, 113, 0.1);
+            border-radius: 8px;
+            color: #27ae60;
+            display: none;
+        }
+
+        .success-message.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .questionnaire-card {
+                padding: 30px 20px;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .radio-group {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .questionnaire-container {
+                padding: 40px 0;
+            }
+            
+            .radio-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .color-picker-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .color-input {
+                width: 100%;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-ruler-combined logo-icon"></i>
+                    <div class="logo-text">Tailor<span>IQ</span></div>
+                </div>
+                <a href="measurements.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Measurements
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="questionnaire-container">
+                <div class="page-header">
+                    <h1 class="page-title">Style Preferences</h1>
+                    <p class="page-subtitle">Tell us about your style preferences to get personalized recommendations</p>
+                    
+                    <!-- Progress Indicator -->
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span class="progress-title">Style Selection Process</span>
+                            <span class="progress-step">Step 3 of 5</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questionnaire Card -->
+                <div class="questionnaire-card">
+                    <div class="questionnaire-header">
+                        <h2 class="questionnaire-title">Your Style Profile</h2>
+                        <p class="questionnaire-subtitle">Answer a few questions to help us understand your preferences</p>
+                    </div>
+                    
+                    <form class="questionnaire-form" id="style-form">
+                        <!-- Event Type -->
+                        <div class="question-group">
+                            <label class="question-label">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>Event Type</span>
+                            </label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="event-wedding" name="event-type" value="wedding" class="radio-input">
+                                    <label for="event-wedding" class="radio-label">
+                                        <i class="fas fa-ring radio-icon"></i>
+                                        <span class="radio-text">Wedding</span>
+                                    </label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="event-office" name="event-type" value="office" class="radio-input">
+                                    <label for="event-office" class="radio-label">
+                                        <i class="fas fa-briefcase radio-icon"></i>
+                                        <span class="radio-text">Office</span>
+                                    </label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="event-casual" name="event-type" value="casual" class="radio-input">
+                                    <label for="event-casual" class="radio-label">
+                                        <i class="fas fa-tshirt radio-icon"></i>
+                                        <span class="radio-text">Casual</span>
+                                    </label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="event-other" name="event-type" value="other" class="radio-input">
+                                    <label for="event-other" class="radio-label">
+                                        <i class="fas fa-star radio-icon"></i>
+                                        <span class="radio-text">Other</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Fit Preference -->
+                        <div class="question-group">
+                            <label class="question-label">
+                                <i class="fas fa-ruler-combined"></i>
+                                <span>Fit Preference</span>
+                            </label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="fit-tight" name="fit-preference" value="tight" class="radio-input">
+                                    <label for="fit-tight" class="radio-label">
+                                        <i class="fas fa-compress-alt radio-icon"></i>
+                                        <span class="radio-text">Tight</span>
+                                    </label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="fit-regular" name="fit-preference" value="regular" class="radio-input" checked>
+                                    <label for="fit-regular" class="radio-label">
+                                        <i class="fas fa-ruler radio-icon"></i>
+                                        <span class="radio-text">Regular</span>
+                                    </label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="fit-loose" name="fit-preference" value="loose" class="radio-input">
+                                    <label for="fit-loose" class="radio-label">
+                                        <i class="fas fa-expand-alt radio-icon"></i>
+                                        <span class="radio-text">Loose</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Fabric Choice -->
+                        <div class="question-group">
+                            <label class="question-label">
+                                <i class="fas fa-tshirt"></i>
+                                <span>Fabric Choice</span>
+                            </label>
+                            <div class="select-group">
+                                <select class="select-input" id="fabric-choice" name="fabric-choice">
+                                    <option value="" disabled selected>Select your preferred fabric</option>
+                                    <option value="ankara">Ankara</option>
+                                    <option value="cotton">Cotton</option>
+                                    <option value="lace">Lace</option>
+                                    <option value="silk">Silk</option>
+                                    <option value="linen">Linen</option>
+                                    <option value="wool">Wool</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                                <i class="fas fa-chevron-down select-icon"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Color Preference -->
+                        <div class="question-group">
+                            <label class="question-label">
+                                <i class="fas fa-palette"></i>
+                                <span>Color Preference</span>
+                            </label>
+                            <div class="color-picker-group">
+                                <input type="color" id="color-picker" class="color-input" value="#008080">
+                                <input type="text" id="color-text" class="color-text-input" placeholder="Or enter a color name (e.g., Navy Blue)">
+                            </div>
+                        </div>
+                        
+                        <!-- Budget Range -->
+                        <div class="question-group">
+                            <label class="question-label">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <span>Budget Range</span>
+                                <span class="optional">(Optional)</span>
+                            </label>
+                            <div class="budget-group">
+                                <input type="range" min="50" max="500" value="150" class="budget-range" id="budget-range">
+                                <div class="budget-labels">
+                                    <span>$50</span>
+                                    <span>$500</span>
+                                </div>
+                                <div class="budget-value" id="budget-value">$150</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Success Message -->
+                        <div class="success-message" id="success-message">
+                            <i class="fas fa-check-circle"></i>
+                            Preferences saved successfully!
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" id="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Measurements
+                    </button>
+                    <button class="btn btn-primary" id="next-btn">
+                        <i class="fas fa-arrow-right"></i>
+                        Next: Style Recommendations
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // DOM Elements
+        const styleForm = document.getElementById('style-form');
+        const colorPicker = document.getElementById('color-picker');
+        const colorText = document.getElementById('color-text');
+        const budgetRange = document.getElementById('budget-range');
+        const budgetValue = document.getElementById('budget-value');
+        const nextBtn = document.getElementById('next-btn');
+        const backBtn = document.getElementById('back-btn');
+        const successMessage = document.getElementById('success-message');
+
+        // Sync color picker and text input
+        colorPicker.addEventListener('input', () => {
+            colorText.value = colorPicker.value;
+        });
+
+        colorText.addEventListener('input', () => {
+            // Check if the input is a valid color
+            const s = new Option().style;
+            s.color = colorText.value;
+            
+            if (s.color !== '') {
+                colorPicker.value = rgbToHex(s.color);
+            }
+        });
+
+        // Update budget value display
+        budgetRange.addEventListener('input', () => {
+            budgetValue.textContent = `$${budgetRange.value}`;
+        });
+
+        // Convert RGB to Hex (for color text input)
+        function rgbToHex(rgb) {
+            // If it's already a hex value, return it
+            if (rgb.startsWith('#')) return rgb;
+            
+            // Create a temporary element to parse the color
+            const temp = document.createElement('div');
+            temp.style.color = rgb;
+            document.body.appendChild(temp);
+            
+            // Get the computed color
+            const computed = window.getComputedStyle(temp).color;
+            document.body.removeChild(temp);
+            
+            // Parse the RGB values
+            const match = computed.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+            if (!match) return '#000000';
+            
+            // Convert to hex
+            const r = parseInt(match[1]).toString(16).padStart(2, '0');
+            const g = parseInt(match[2]).toString(16).padStart(2, '0');
+            const b = parseInt(match[3]).toString(16).padStart(2, '0');
+            
+            return `#${r}${g}${b}`;
+        }
+
+        // Save form data to localStorage
+        function saveFormData() {
+            const formData = new FormData(styleForm);
+            const data = {
+                eventType: formData.get('event-type'),
+                fitPreference: formData.get('fit-preference'),
+                fabricChoice: document.getElementById('fabric-choice').value,
+                colorPreference: colorText.value || colorPicker.value,
+                budgetRange: budgetRange.value
+            };
+            
+            localStorage.setItem('tailoriq_style_preferences', JSON.stringify(data));
+            console.log('Style preferences saved to localStorage:', data);
+        }
+
+        // Load form data from localStorage
+        function loadFormData() {
+            const saved = localStorage.getItem('tailoriq_style_preferences');
+            
+            if (saved) {
+                const data = JSON.parse(saved);
+                
+                // Set event type
+                if (data.eventType) {
+                    document.querySelector(`input[name="event-type"][value="${data.eventType}"]`).checked = true;
+                }
+                
+                // Set fit preference
+                if (data.fitPreference) {
+                    document.querySelector(`input[name="fit-preference"][value="${data.fitPreference}"]`).checked = true;
+                }
+                
+                // Set fabric choice
+                if (data.fabricChoice) {
+                    document.getElementById('fabric-choice').value = data.fabricChoice;
+                }
+                
+                // Set color preference
+                if (data.colorPreference) {
+                    colorPicker.value = data.colorPreference;
+                    colorText.value = data.colorPreference;
+                }
+                
+                // Set budget range
+                if (data.budgetRange) {
+                    budgetRange.value = data.budgetRange;
+                    budgetValue.textContent = `$${data.budgetRange}`;
+                }
+                
+                return data;
+            }
+            
+            return null;
+        }
+
+        // Form validation
+        function validateForm() {
+            const eventType = document.querySelector('input[name="event-type"]:checked');
+            const fitPreference = document.querySelector('input[name="fit-preference"]:checked');
+            const fabricChoice = document.getElementById('fabric-choice').value;
+            
+            if (!eventType || !fitPreference || !fabricChoice) {
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Update form validation state
+        function updateValidationState() {
+            nextBtn.disabled = !validateForm();
+        }
+
+        // Add event listeners for form validation
+        styleForm.addEventListener('change', () => {
+            updateValidationState();
+            saveFormData();
+            
+            // Show success message briefly
+            successMessage.classList.add('active');
+            setTimeout(() => {
+                successMessage.classList.remove('active');
+            }, 2000);
+        });
+
+        // Next button functionality
+        nextBtn.addEventListener('click', () => {
+            if (validateForm()) {
+                saveFormData();
+                
+                // Show confirmation
+                alert('Preferences saved! Proceeding to style recommendations...');
+                
+                // In a real app, you would redirect to the recommendations page
+                 window.location.href = 'recommendations.html';
+            }
+        });
+
+        // Back button functionality
+        backBtn.addEventListener('click', () => {
+            window.history.back();
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load saved preferences
+            loadFormData();
+            
+            // Set initial validation state
+            updateValidationState();
+        });
+    </script>
+</body>
+</html>

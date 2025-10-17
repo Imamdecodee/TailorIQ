@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TailorIQ - Tailor Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #008080; /* Teal */
+            --secondary: #D4AF37; /* Gold */
+            --light: #F8F9FA;
+            --dark: #343A40;
+            --gray: #6C757D;
+            --white: #FFFFFF;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--dark);
+            background: #f5f7fa;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            padding: 20px 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .logo-text span {
+            color: var(--primary);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary);
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Dashboard Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: var(--white);
+            box-shadow: var(--shadow);
+            padding: 30px 0;
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-item {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 25px;
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-link:hover, .sidebar-link.active {
+            background: rgba(0, 128, 128, 0.05);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        .sidebar-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .dashboard-content {
+            flex: 1;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .dashboard-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Analytics Cards */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .analytics-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: var(--transition);
+        }
+
+        .analytics-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .analytics-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .analytics-icon.customers {
+            background: rgba(0, 128, 128, 0.1);
+            color: var(--primary);
+        }
+
+        .analytics-icon.orders {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--secondary);
+        }
+
+        .analytics-icon.score {
+            background: rgba(46, 204, 113, 0.1);
+            color: #27ae60;
+        }
+
+        .analytics-info h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .analytics-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Orders Section */
+        .orders-section {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Orders Grid */
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            padding: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .orders-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Order Card */
+        .order-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid #eaeaea;
+        }
+
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-header {
+            padding: 20px;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .customer-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .customer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .customer-details h4 {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .customer-details p {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .order-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: rgba(241, 196, 15, 0.1);
+            color: #f39c12;
+        }
+
+        .status-in-progress {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+
+        .status-completed {
+            background: rgba(46, 204, 113, 0.1);
+            color: #27ae60;
+        }
+
+        .order-body {
+            padding: 20px;
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-weight: 500;
+        }
+
+        .measurements-preview {
+            background: rgba(0, 128, 128, 0.05);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+        }
+
+        .measurements-preview h5 {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .measurements-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .measurement-tag {
+            background: rgba(0, 128, 128, 0.1);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .order-footer {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-date {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 14px rgba(0, 128, 128, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: #006666;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 128, 128, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: var(--white);
+            color: var(--dark);
+            border: 1px solid #e0e0e0;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(0, 128, 128, 0.05);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-header {
+            padding: 25px;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--dark);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                padding: 20px 0;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                overflow-x: auto;
+                padding: 0 20px;
+            }
+            
+            .sidebar-item {
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            
+            .sidebar-link {
+                border-left: none;
+                border-bottom: 3px solid transparent;
+                padding: 10px 15px;
+            }
+            
+            .sidebar-link.active {
+                border-left: none;
+                border-bottom-color: var(--primary);
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .dashboard-content {
+                padding: 20px;
+            }
+            
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .order-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .order-footer {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-ruler-combined logo-icon"></i>
+                    <div class="logo-text">Tailor<span>IQ</span></div>
+                </div>
+                <nav class="nav-menu">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                    <a href="gallery.html" class="nav-link">
+                        <i class="fas fa-tshirt"></i>
+                        Style Gallery
+                    </a>
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                    <a href="login.html" class="nav-link">
+                        <i class="fas fa-user-circle"></i>
+                        My Account
+                    </a>
+                </nav>
+                <div class="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link active">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-list-alt"></i>
+                        Orders
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-users"></i>
+                        Customers
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-chart-bar"></i>
+                        Analytics
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-cog"></i>
+                        Settings
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="index.html" class="sidebar-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Back to Home
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Tailor Dashboard</h1>
+                <div class="dashboard-actions">
+                    <button class="btn btn-primary" id="add-order-btn">
+                        <i class="fas fa-plus"></i>
+                        Add New Order
+                    </button>
+                    <button class="btn btn-secondary" id="refresh-btn">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Analytics Cards -->
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <div class="analytics-icon customers">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="analytics-info">
+                        <h3 id="total-customers">24</h3>
+                        <p>Total Customers</p>
+                    </div>
+                </div>
+                <div class="analytics-card">
+                    <div class="analytics-icon orders">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div class="analytics-info">
+                        <h3 id="total-orders">18</h3>
+                        <p>Total Orders</p>
+                    </div>
+                </div>
+                <div class="analytics-card">
+                    <div class="analytics-icon score">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="analytics-info">
+                        <h3 id="avg-fit-score">94%</h3>
+                        <p>Average Fit Score</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Section -->
+            <section class="orders-section">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Orders</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-outline btn-sm">
+                            <i class="fas fa-filter"></i>
+                            Filter
+                        </button>
+                        <button class="btn btn-outline btn-sm">
+                            <i class="fas fa-sort"></i>
+                            Sort
+                        </button>
+                    </div>
+                </div>
+                <div class="orders-grid" id="orders-grid">
+                    <!-- Order cards will be generated by JavaScript -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div class="modal" id="order-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Order Details</h2>
+                <button class="modal-close" id="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Modal content will be generated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample order data
+        const sampleOrders = [
+            {
+                id: 1,
+                customer: {
+                    name: "Sarah Johnson",
+                    gender: "Female",
+                    email: "sarah.j@example.com",
+                    phone: "+1 (555) 123-4567"
+                },
+                measurements: {
+                    chest: "36 in",
+                    waist: "28 in",
+                    hips: "38 in",
+                    shoulder: "15 in",
+                    armLength: "24 in",
+                    inseam: "30 in",
+                    height: "5'6\""
+                },
+                style: {
+                    name: "Ankara Classic",
+                    type: "Casual",
+                    fabric: "Ankara",
+                    color: "Multicolor"
+                },
+                status: "In Progress",
+                orderDate: "2023-10-15",
+                dueDate: "2023-11-05",
+                notes: "Customer prefers slightly looser fit around shoulders."
+            },
+            {
+                id: 2,
+                customer: {
+                    name: "Michael Chen",
+                    gender: "Male",
+                    email: "m.chen@example.com",
+                    phone: "+1 (555) 987-6543"
+                },
+                measurements: {
+                    chest: "42 in",
+                    waist: "36 in",
+                    hips: "40 in",
+                    shoulder: "18 in",
+                    armLength: "25 in",
+                    inseam: "32 in",
+                    height: "5'11\""
+                },
+                style: {
+                    name: "Corporate Fit",
+                    type: "Office",
+                    fabric: "Wool Blend",
+                    color: "Navy Blue"
+                },
+                status: "Completed",
+                orderDate: "2023-10-10",
+                dueDate: "2023-10-30",
+                notes: "Excellent fit according to customer feedback."
+            },
+            {
+                id: 3,
+                customer: {
+                    name: "Emily Rodriguez",
+                    gender: "Female",
+                    email: "emily.r@example.com",
+                    phone: "+1 (555) 456-7890"
+                },
+                measurements: {
+                    chest: "34 in",
+                    waist: "26 in",
+                    hips: "36 in",
+                    shoulder: "14 in",
+                    armLength: "23 in",
+                    inseam: "29 in",
+                    height: "5'4\""
+                },
+                style: {
+                    name: "Wedding Elegance",
+                    type: "Wedding",
+                    fabric: "Lace & Silk",
+                    color: "Ivory"
+                },
+                status: "Pending",
+                orderDate: "2023-10-20",
+                dueDate: "2023-11-15",
+                notes: "Bridal gown with custom embroidery requested."
+            },
+            {
+                id: 4,
+                customer: {
+                    name: "David Wilson",
+                    gender: "Male",
+                    email: "d.wilson@example.com",
+                    phone: "+1 (555) 234-5678"
+                },
+                measurements: {
+                    chest: "44 in",
+                    waist: "38 in",
+                    hips: "42 in",
+                    shoulder: "19 in",
+                    armLength: "26 in",
+                    inseam: "34 in",
+                    height: "6'2\""
+                },
+                style: {
+                    name: "Modern Ankara",
+                    type: "Casual",
+                    fabric: "Ankara",
+                    color: "Blue & Gold"
+                },
+                status: "In Progress",
+                orderDate: "2023-10-18",
+                dueDate: "2023-11-08",
+                notes: "Customer requested shorter sleeve length."
+            },
+            {
+                id: 5,
+                customer: {
+                    name: "Jessica Taylor",
+                    gender: "Female",
+                    email: "j.taylor@example.com",
+                    phone: "+1 (555) 345-6789"
+                },
+                measurements: {
+                    chest: "38 in",
+                    waist: "30 in",
+                    hips: "40 in",
+                    shoulder: "16 in",
+                    armLength: "24.5 in",
+                    inseam: "31 in",
+                    height: "5'8\""
+                },
+                style: {
+                    name: "Executive Style",
+                    type: "Office",
+                    fabric: "Cotton Blend",
+                    color: "Charcoal Gray"
+                },
+                status: "Completed",
+                orderDate: "2023-10-05",
+                dueDate: "2023-10-25",
+                notes: "Perfect fit. Customer very satisfied."
+            },
+            {
+                id: 6,
+                customer: {
+                    name: "Robert Kim",
+                    gender: "Male",
+                    email: "r.kim@example.com",
+                    phone: "+1 (555) 567-8901"
+                },
+                measurements: {
+                    chest: "40 in",
+                    waist: "34 in",
+                    hips: "39 in",
+                    shoulder: "17 in",
+                    armLength: "25 in",
+                    inseam: "32 in",
+                    height: "5'10\""
+                },
+                style: {
+                    name: "Weekend Casual",
+                    type: "Casual",
+                    fabric: "Linen",
+                    color: "Beige"
+                },
+                status: "Pending",
+                orderDate: "2023-10-22",
+                dueDate: "2023-11-12",
+                notes: "Customer prefers relaxed fit throughout."
+            }
+        ];
+
+        // DOM Elements
+        const ordersGrid = document.getElementById('orders-grid');
+        const orderModal = document.getElementById('order-modal');
+        const modalClose = document.getElementById('modal-close');
+        const modalBody = document.getElementById('modal-body');
+        const addOrderBtn = document.getElementById('add-order-btn');
+        const refreshBtn = document.getElementById('refresh-btn');
+        const totalCustomersEl = document.getElementById('total-customers');
+        const totalOrdersEl = document.getElementById('total-orders');
+        const avgFitScoreEl = document.getElementById('avg-fit-score');
+
+        // Load orders from localStorage or use sample data
+        function loadOrders() {
+            const savedOrders = localStorage.getItem('tailoriq_orders');
+            let orders = [];
+            
+            if (savedOrders) {
+                orders = JSON.parse(savedOrders);
+            } else {
+                orders = sampleOrders;
+                localStorage.setItem('tailoriq_orders', JSON.stringify(orders));
+            }
+            
+            return orders;
+        }
+
+        // Render orders in the grid
+        function renderOrders(orders) {
+            ordersGrid.innerHTML = '';
+            
+            orders.forEach(order => {
+                const orderCard = document.createElement('div');
+                orderCard.className = 'order-card';
+                orderCard.dataset.id = order.id;
+                
+                // Get initials for avatar
+                const names = order.customer.name.split(' ');
+                const initials = names[0].charAt(0) + (names[1] ? names[1].charAt(0) : '');
+                
+                orderCard.innerHTML = `
+                    <div class="order-header">
+                        <div class="customer-info">
+                            <div class="customer-avatar">${initials}</div>
+                            <div class="customer-details">
+                                <h4>${order.customer.name}</h4>
+                                <p>${order.customer.gender}</p>
+                            </div>
+                        </div>
+                        <span class="order-status status-${order.status.toLowerCase().replace(' ', '-')}">${order.status}</span>
+                    </div>
+                    <div class="order-body">
+                        <div class="order-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Style</span>
+                                <span class="detail-value">${order.style.name}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Fabric</span>
+                                <span class="detail-value">${order.style.fabric}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Color</span>
+                                <span class="detail-value">${order.style.color}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Type</span>
+                                <span class="detail-value">${order.style.type}</span>
+                            </div>
+                        </div>
+                        <div class="measurements-preview">
+                            <h5>Key Measurements</h5>
+                            <div class="measurements-list">
+                                <span class="measurement-tag">Chest: ${order.measurements.chest}</span>
+                                <span class="measurement-tag">Waist: ${order.measurements.waist}</span>
+                                <span class="measurement-tag">Hips: ${order.measurements.hips}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-footer">
+                        <span class="order-date">Ordered: ${formatDate(order.orderDate)}</span>
+                        <button class="btn btn-outline btn-sm view-details-btn" data-id="${order.id}">
+                            <i class="fas fa-eye"></i>
+                            View Details
+                        </button>
+                    </div>
+                `;
+                
+                ordersGrid.appendChild(orderCard);
+            });
+            
+            // Add event listeners to view details buttons
+            document.querySelectorAll('.view-details-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const orderId = parseInt(btn.dataset.id);
+                    showOrderDetails(orderId);
+                });
+            });
+        }
+
+        // Show order details in modal
+        function showOrderDetails(orderId) {
+            const orders = loadOrders();
+            const order = orders.find(o => o.id === orderId);
+            
+            if (!order) return;
+            
+            // Get initials for avatar
+            const names = order.customer.name.split(' ');
+            const initials = names[0].charAt(0) + (names[1] ? names[1].charAt(0) : '');
+            
+            modalBody.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+                    <div class="customer-avatar" style="width: 60px; height: 60px; font-size: 1.2rem;">${initials}</div>
+                    <div>
+                        <h3 style="margin-bottom: 5px;">${order.customer.name}</h3>
+                        <p style="color: var(--gray);">${order.customer.gender} • ${order.customer.email}</p>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+                    <div>
+                        <h4 style="margin-bottom: 15px; color: var(--dark);">Customer Information</h4>
+                        <div style="display: grid; gap: 10px;">
+                            <div>
+                                <strong>Email:</strong> ${order.customer.email}
+                            </div>
+                            <div>
+                                <strong>Phone:</strong> ${order.customer.phone}
+                            </div>
+                            <div>
+                                <strong>Order Date:</strong> ${formatDate(order.orderDate)}
+                            </div>
+                            <div>
+                                <strong>Due Date:</strong> ${formatDate(order.dueDate)}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 style="margin-bottom: 15px; color: var(--dark);">Style Details</h4>
+                        <div style="display: grid; gap: 10px;">
+                            <div>
+                                <strong>Style:</strong> ${order.style.name}
+                            </div>
+                            <div>
+                                <strong>Type:</strong> ${order.style.type}
+                            </div>
+                            <div>
+                                <strong>Fabric:</strong> ${order.style.fabric}
+                            </div>
+                            <div>
+                                <strong>Color:</strong> ${order.style.color}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 30px;">
+                    <h4 style="margin-bottom: 15px; color: var(--dark);">Measurements</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px;">
+                        ${Object.entries(order.measurements).map(([key, value]) => `
+                            <div style="background: rgba(0, 128, 128, 0.05); padding: 12px; border-radius: 8px;">
+                                <div style="font-size: 0.85rem; color: var(--gray); text-transform: capitalize;">${key}</div>
+                                <div style="font-weight: 600;">${value}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 style="margin-bottom: 15px; color: var(--dark);">Order Notes</h4>
+                    <div style="background: rgba(0, 128, 128, 0.05); padding: 15px; border-radius: 8px;">
+                        ${order.notes}
+                    </div>
+                </div>
+            `;
+            
+            orderModal.classList.add('active');
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        // Update analytics
+        function updateAnalytics() {
+            const orders = loadOrders();
+            
+            // Calculate unique customers
+            const uniqueCustomers = [...new Set(orders.map(order => order.customer.email))].length;
+            totalCustomersEl.textContent = uniqueCustomers;
+            
+            // Total orders
+            totalOrdersEl.textContent = orders.length;
+            
+            // Mock average fit score (in a real app, this would be calculated)
+            avgFitScoreEl.textContent = '94%';
+        }
+
+        // Add new order (demo functionality)
+        function addNewOrder() {
+            const orders = loadOrders();
+            const newId = orders.length > 0 ? Math.max(...orders.map(o => o.id)) + 1 : 1;
+            
+            const newOrder = {
+                id: newId,
+                customer: {
+                    name: "New Customer",
+                    gender: "Female",
+                    email: "new.customer@example.com",
+                    phone: "+1 (555) 000-0000"
+                },
+                measurements: {
+                    chest: "36 in",
+                    waist: "28 in",
+                    hips: "38 in",
+                    shoulder: "15 in",
+                    armLength: "24 in",
+                    inseam: "30 in",
+                    height: "5'6\""
+                },
+                style: {
+                    name: "Sample Style",
+                    type: "Casual",
+                    fabric: "Cotton",
+                    color: "Blue"
+                },
+                status: "Pending",
+                orderDate: new Date().toISOString().split('T')[0],
+                dueDate: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                notes: "This is a sample order added for demonstration."
+            };
+            
+            orders.push(newOrder);
+            localStorage.setItem('tailoriq_orders', JSON.stringify(orders));
+            
+            renderOrders(orders);
+            updateAnalytics();
+            
+            alert('New order added successfully!');
+        }
+
+        // Initialize dashboard
+        function initDashboard() {
+            const orders = loadOrders();
+            renderOrders(orders);
+            updateAnalytics();
+        }
+
+        // Event Listeners
+        modalClose.addEventListener('click', () => {
+            orderModal.classList.remove('active');
+        });
+
+        addOrderBtn.addEventListener('click', addNewOrder);
+
+        refreshBtn.addEventListener('click', () => {
+            initDashboard();
+            alert('Dashboard refreshed!');
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === orderModal) {
+                orderModal.classList.remove('active');
+            }
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>

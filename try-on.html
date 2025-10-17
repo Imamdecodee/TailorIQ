@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TailorIQ - Virtual Try-On</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #008080; /* Teal */
+            --secondary: #D4AF37; /* Gold */
+            --light: #F8F9FA;
+            --dark: #343A40;
+            --gray: #6C757D;
+            --white: #FFFFFF;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ee 100%);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            padding: 20px 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .logo-text span {
+            color: var(--primary);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            color: var(--primary);
+        }
+
+        /* Main Content */
+        .tryon-container {
+            padding: 60px 0;
+            min-height: calc(100vh - 120px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .page-subtitle {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        /* Progress Indicator */
+        .progress-container {
+            max-width: 600px;
+            margin: 0 auto 50px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .progress-title {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .progress-step {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 100%; /* Step 5 of 5 */
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Try-On Preview */
+        .tryon-preview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        @media (min-width: 992px) {
+            .tryon-preview {
+                flex-direction: row;
+                align-items: flex-start;
+                justify-content: center;
+            }
+        }
+
+        .preview-container {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .preview-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--dark);
+            text-align: center;
+        }
+
+        .preview-image-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: 500px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            background: var(--light);
+        }
+
+        .user-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        .outfit-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 2;
+            opacity: 0.7;
+            mix-blend-mode: multiply;
+            transition: var(--transition);
+        }
+
+        .controls-container {
+            flex: 1;
+            max-width: 400px;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+        }
+
+        .controls-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--dark);
+            text-align: center;
+        }
+
+        /* Style Info */
+        .style-info {
+            background: rgba(0, 128, 128, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .style-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .style-description {
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+
+        .style-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .style-feature {
+            background: rgba(0, 128, 128, 0.1);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Controls */
+        .control-group {
+            margin-bottom: 25px;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .control-label span {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .control-value {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #e0e0e0;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.2);
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .control-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: var(--white);
+            color: var(--dark);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .control-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .control-btn.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        @media (min-width: 768px) {
+            .action-buttons {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 14px rgba(0, 128, 128, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: #006666;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(0, 128, 128, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background-color: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background-color: var(--white);
+            color: var(--dark);
+            border: 2px solid #e0e0e0;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-download {
+            background-color: var(--secondary);
+            color: var(--dark);
+            box-shadow: 0 4px 14px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-download:hover {
+            background-color: #c19d2e;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Demo Note */
+        .demo-note {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 8px;
+            color: #8b6f1e;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Success Message */
+        .success-message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(46, 204, 113, 0.1);
+            border-radius: 8px;
+            color: #27ae60;
+            display: none;
+        }
+
+        .success-message.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .tryon-container {
+                padding: 40px 0;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .preview-image-container {
+                height: 400px;
+            }
+            
+            .controls-container {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .preview-image-container {
+                height: 350px;
+            }
+            
+            .style-features {
+                justify-content: center;
+            }
+            
+            .control-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-ruler-combined logo-icon"></i>
+                    <div class="logo-text">Tailor<span>IQ</span></div>
+                </div>
+                <a href="gallery.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Gallery
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="tryon-container">
+                <div class="page-header">
+                    <h1 class="page-title">Virtual Try-On</h1>
+                    <p class="page-subtitle">See how your selected outfit looks on you with our virtual try-on technology</p>
+                    
+                    <!-- Progress Indicator -->
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span class="progress-title">Style Selection Process</span>
+                            <span class="progress-step">Step 5 of 5</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Try-On Preview -->
+                <div class="tryon-preview">
+                    <!-- Preview Container -->
+                    <div class="preview-container">
+                        <h2 class="preview-title">Your Virtual Try-On</h2>
+                        <div class="preview-image-container">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="User photo" class="user-image" id="user-image">
+                            <img src="" alt="Outfit overlay" class="outfit-overlay" id="outfit-overlay">
+                        </div>
+                    </div>
+
+                    <!-- Controls Container -->
+                    <div class="controls-container">
+                        <h2 class="controls-title">Try-On Controls</h2>
+                        
+                        <!-- Style Info -->
+                        <div class="style-info">
+                            <h3 class="style-name" id="style-name">Corporate Fit</h3>
+                            <p class="style-description" id="style-description">Professional attire with perfect tailoring for the modern workplace.</p>
+                            <div class="style-features" id="style-features">
+                                <!-- Features will be added by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Opacity Control -->
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Outfit Opacity</span>
+                                <span class="control-value" id="opacity-value">70%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="70" class="slider" id="opacity-slider">
+                            <div class="control-buttons">
+                                <button class="control-btn" data-opacity="50">50%</button>
+                                <button class="control-btn active" data-opacity="70">70%</button>
+                                <button class="control-btn" data-opacity="90">90%</button>
+                            </div>
+                        </div>
+
+                        <!-- Blend Mode Control -->
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Blend Mode</span>
+                                <span class="control-value" id="blend-value">Multiply</span>
+                            </div>
+                            <div class="control-buttons">
+                                <button class="control-btn active" data-blend="multiply">Multiply</button>
+                                <button class="control-btn" data-blend="overlay">Overlay</button>
+                                <button class="control-btn" data-blend="normal">Normal</button>
+                            </div>
+                        </div>
+
+                        <!-- Success Message -->
+                        <div class="success-message" id="success-message">
+                            <i class="fas fa-check-circle"></i>
+                            Preview image downloaded successfully!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" id="change-style-btn">
+                        <i class="fas fa-arrow-left"></i>
+                        Change Style
+                    </button>
+                    <button class="btn btn-download" id="download-btn">
+                        <i class="fas fa-download"></i>
+                        Download Preview
+                    </button>
+                    <button class="btn btn-primary" id="continue-btn">
+                        <i class="fas fa-user-tie"></i>
+                        Continue to Tailor Dashboard
+                    </button>
+                </div>
+
+                <!-- Demo Note -->
+                <div class="demo-note">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Note:</strong> This is a demo simulation. Final fit accuracy may vary based on actual measurements and fabric properties.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // DOM Elements
+        const userImage = document.getElementById('user-image');
+        const outfitOverlay = document.getElementById('outfit-overlay');
+        const opacitySlider = document.getElementById('opacity-slider');
+        const opacityValue = document.getElementById('opacity-value');
+        const blendValue = document.getElementById('blend-value');
+        const styleName = document.getElementById('style-name');
+        const styleDescription = document.getElementById('style-description');
+        const styleFeatures = document.getElementById('style-features');
+        const changeStyleBtn = document.getElementById('change-style-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const continueBtn = document.getElementById('continue-btn');
+        const successMessage = document.getElementById('success-message');
+        const opacityButtons = document.querySelectorAll('.control-btn[data-opacity]');
+        const blendButtons = document.querySelectorAll('.control-btn[data-blend]');
+
+        // Load selected style from localStorage
+        function loadSelectedStyle() {
+            const savedStyle = localStorage.getItem('tailoriq_selected_style');
+            
+            if (savedStyle) {
+                const style = JSON.parse(savedStyle);
+                
+                // Update outfit overlay
+                outfitOverlay.src = style.image;
+                outfitOverlay.alt = style.title;
+                
+                // Update style info
+                styleName.textContent = style.title;
+                styleDescription.textContent = style.description;
+                
+                // Update features
+                styleFeatures.innerHTML = '';
+                style.features.forEach(feature => {
+                    const featureEl = document.createElement('span');
+                    featureEl.className = 'style-feature';
+                    featureEl.textContent = feature;
+                    styleFeatures.appendChild(featureEl);
+                });
+                
+                return style;
+            } else {
+                // Fallback to a default style
+                const defaultStyle = {
+                    title: "Corporate Fit",
+                    description: "Professional attire with perfect tailoring for the modern workplace.",
+                    image: "https://images.unsplash.com/photo-1593030103066-0093718efeb9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80",
+                    features: ["Professional", "Tailored Fit", "Premium Fabric"]
+                };
+                
+                outfitOverlay.src = defaultStyle.image;
+                styleName.textContent = defaultStyle.title;
+                styleDescription.textContent = defaultStyle.description;
+                
+                defaultStyle.features.forEach(feature => {
+                    const featureEl = document.createElement('span');
+                    featureEl.className = 'style-feature';
+                    featureEl.textContent = feature;
+                    styleFeatures.appendChild(featureEl);
+                });
+                
+                return defaultStyle;
+            }
+        }
+
+        // Load user photo from localStorage or use default
+        function loadUserPhoto() {
+            // In a real app, you would get this from localStorage or the server
+            // For demo purposes, we'll use a placeholder
+            const savedUserPhoto = localStorage.getItem('tailoriq_user_photo');
+            
+            if (savedUserPhoto) {
+                userImage.src = savedUserPhoto;
+            } else {
+                // Use a default user photo
+                userImage.src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80";
+            }
+        }
+
+        // Update outfit opacity
+        function updateOpacity(value) {
+            outfitOverlay.style.opacity = value / 100;
+            opacityValue.textContent = `${value}%`;
+            opacitySlider.value = value;
+            
+            // Update active button
+            opacityButtons.forEach(btn => {
+                if (parseInt(btn.dataset.opacity) === value) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // Update blend mode
+        function updateBlendMode(mode) {
+            outfitOverlay.style.mixBlendMode = mode;
+            blendValue.textContent = mode.charAt(0).toUpperCase() + mode.slice(1);
+            
+            // Update active button
+            blendButtons.forEach(btn => {
+                if (btn.dataset.blend === mode) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // Simulate download
+        function simulateDownload() {
+            // In a real app, you would generate and download the composite image
+            // For this demo, we'll just show a success message
+            
+            successMessage.classList.add('active');
+            setTimeout(() => {
+                successMessage.classList.remove('active');
+            }, 3000);
+            
+            console.log('Downloading virtual try-on preview...');
+        }
+
+        // Event Listeners
+        opacitySlider.addEventListener('input', () => {
+            updateOpacity(opacitySlider.value);
+        });
+
+        opacityButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                updateOpacity(parseInt(btn.dataset.opacity));
+            });
+        });
+
+        blendButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                updateBlendMode(btn.dataset.blend);
+            });
+        });
+
+        downloadBtn.addEventListener('click', simulateDownload);
+
+        changeStyleBtn.addEventListener('click', () => {
+            window.location.href = 'gallery.html';
+        });
+
+        continueBtn.addEventListener('click', () => {
+            alert('Proceeding to tailor dashboard...');
+            // In a real app, you would redirect to the dashboard
+             window.location.href = 'dashboard.html';
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSelectedStyle();
+            loadUserPhoto();
+            updateOpacity(70);
+            updateBlendMode('multiply');
+        });
+    </script>
+</body>
+</html>

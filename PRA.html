@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TailorIQ - AI-Powered Tailoring Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #008080; /* Teal */
+            --secondary: #FFD700; /* Gold */
+            --light: #f8f9fa;
+            --dark: #333333;
+            --gray: #6c757d;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--dark);
+            background-color: var(--white);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .logo-icon {
+            background-color: var(--primary);
+            color: var(--white);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #006666;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(0, 128, 128, 0.1);
+        }
+
+        .hero {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .steps-container {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .step-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .step-card h3 {
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .step-card p {
+            color: var(--gray);
+        }
+
+        .demo-section {
+            background-color: #f8f9fa;
+            padding: 80px 0;
+        }
+
+        .demo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .demo-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 30px;
+        }
+
+        .demo-card h3 {
+            margin-bottom: 20px;
+            color: var(--dark);
+            text-align: center;
+        }
+
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+        }
+
+        .upload-area i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .upload-area p {
+            color: var(--gray);
+        }
+
+        .measurements-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .measurement-item {
+            background-color: #f0f8f8;
+            border-radius: 5px;
+            padding: 10px 15px;
+            flex: 1 1 calc(50% - 15px);
+            min-width: 150px;
+        }
+
+        .measurement-item h4 {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+
+        .measurement-item p {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .style-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .style-option {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            flex: 1 1 calc(33.333% - 15px);
+            min-width: 150px;
+        }
+
+        .style-option:hover {
+            border-color: var(--primary);
+        }
+
+        .style-option.selected {
+            border-color: var(--primary);
+            background-color: rgba(0, 128, 128, 0.05);
+        }
+
+        .style-option img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .try-on-preview {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .preview-image {
+            width: 100%;
+            max-width: 400px;
+            height: 400px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+        }
+
+        .cta-section {
+            padding: 80px 0;
+            text-align: center;
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+
+        footer {
+            background-color: var(--dark);
+            color: var(--white);
+            padding: 50px 0 20px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column {
+            flex: 1 1 200px;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column a {
+            color: #ddd;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-column a:hover {
+            color: var(--white);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav ul {
+                gap: 15px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .step-card {
+                max-width: 100%;
+            }
+
+            .measurement-item {
+                flex: 1 1 100%;
+            }
+
+            .style-option {
+                flex: 1 1 calc(50% - 15px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .style-option {
+                flex: 1 1 100%;
+            }
+
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">TQ</div>
+                    <span>TailorIQ</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#demo">Demo</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                    </ul>
+                </nav>
+                <div class="auth-buttons">
+                    <button class="btn btn-outline">Log In</button>
+                    <button class="btn btn-primary">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>AI-Powered Tailoring Assistant</h1>
+            <p>Get perfectly fitted clothes with our advanced AI technology. Upload your photo, get automatic measurements, and try on styles virtually.</p>
+            <button class="btn btn-primary">Get Started</button>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="steps-container" id="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>How TailorIQ Works</h2>
+                <p>Our four-step process makes getting perfectly fitted clothes simple and convenient</p>
+            </div>
+            <div class="steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Upload Your Photo</h3>
+                    <p>Take or upload a full-body photo following our simple guidelines for best results.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Get Measurements</h3>
+                    <p>Our AI analyzes your photo to extract precise body measurements automatically.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Choose Styles</h3>
+                    <p>Browse our catalog and select your preferred clothing styles and fabrics.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Virtual Try-On</h3>
+                    <p>See how the clothes will look on you with our realistic virtual try-on technology.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section class="demo-section" id="demo">
+        <div class="container">
+            <div class="section-title">
+                <h2>Try TailorIQ Now</h2>
+                <p>Experience our virtual tailoring process with this interactive demo</p>
+            </div>
+            <div class="demo-container">
+                <!-- Step 1: Photo Upload -->
+                <div class="demo-card">
+                    <h3>Step 1: Upload Your Photo</h3>
+                    <div class="upload-area" id="uploadArea">
+                        <i>📷</i>
+                        <p>Click to upload or drag and drop your photo</p>
+                        <p class="small">Recommended: Full-body photo with light background</p>
+                    </div>
+                    <div class="upload-preview" id="uploadPreview" style="display: none; text-align: center;">
+                        <img id="previewImage" src="" alt="Uploaded photo" style="max-width: 300px; border-radius: 10px;">
+                        <button class="btn btn-outline" style="margin-top: 15px;" id="changePhotoBtn">Change Photo</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Measurements -->
+                <div class="demo-card">
+                    <h3>Step 2: Your Measurements</h3>
+                    <p>Based on your uploaded photo, here are your automatic measurements:</p>
+                    <div class="measurements-display">
+                        <div class="measurement-item">
+                            <h4>Shoulder Width</h4>
+                            <p>18.5 inches</p>
+                        </div>
+                        <div class="measurement-item">
+                            <h4>Chest</h4>
+                            <p>40 inches</p>
+                        </div>
+                        <div class="measurement-item">
+                            <h4>Waist</h4>
+                            <p>34 inches</p>
+                        </div>
+                        <div class="measurement-item">
+                            <h4>Hips</h4>
+                            <p>38 inches</p>
+                        </div>
+                        <div class="measurement-item">
+                            <h4>Inseam</h4>
+                            <p>32 inches</p>
+                        </div>
+                        <div class="measurement-item">
+                            <h4>Sleeve Length</h4>
+                            <p>25 inches</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 20px;">Save Measurements</button>
+                </div>
+
+                <!-- Step 3: Style Preferences -->
+                <div class="demo-card">
+                    <h3>Step 3: Choose Your Style</h3>
+                    <p>Select your preferred clothing styles:</p>
+                    <div class="style-options">
+                        <div class="style-option selected">
+                            <img src="https://via.placeholder.com/150x150/008080/FFFFFF?text=Casual" alt="Casual Style">
+                            <p>Casual</p>
+                        </div>
+                        <div class="style-option">
+                            <img src="https://via.placeholder.com/150x150/008080/FFFFFF?text=Business" alt="Business Style">
+                            <p>Business</p>
+                        </div>
+                        <div class="style-option">
+                            <img src="https://via.placeholder.com/150x150/008080/FFFFFF?text=Formal" alt="Formal Style">
+                            <p>Formal</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 20px;">Continue to Try-On</button>
+                </div>
+
+                <!-- Step 4: Virtual Try-On -->
+                <div class="demo-card">
+                    <h3>Step 4: Virtual Try-On Preview</h3>
+                    <p>See how your selected styles look on you:</p>
+                    <div class="try-on-preview">
+                        <div class="preview-image">
+                            Virtual Try-On Preview
+                        </div>
+                        <button class="btn btn-primary">Save This Outfit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready for Perfectly Fitted Clothes?</h2>
+            <p>Join thousands of satisfied customers who have discovered the future of tailoring with TailorIQ.</p>
+            <button class="btn" style="background-color: var(--white); color: var(--primary);">Get Started Today</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>TailorIQ</h3>
+                    <p>AI-powered tailoring for the modern era. Get perfectly fitted clothes without leaving your home.</p>
+                    <div class="social-links">
+                        <a href="#"><span>f</span></a>
+                        <a href="#"><span>t</span></a>
+                        <a href="#"><span>in</span></a>
+                        <a href="#"><span>ig</span></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#demo">Demo</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li>Email: info@tailoriq.com</li>
+                        <li>Phone: +1 (555) 123-4567</li>
+                        <li>Address: 123 Fashion Ave, New York, NY</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 TailorIQ. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Demo functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Photo upload functionality
+            const uploadArea = document.getElementById('uploadArea');
+            const uploadPreview = document.getElementById('uploadPreview');
+            const previewImage = document.getElementById('previewImage');
+            const changePhotoBtn = document.getElementById('changePhotoBtn');
+            
+            uploadArea.addEventListener('click', function() {
+                // In a real app, this would open a file picker
+                // For demo purposes, we'll just show a placeholder
+                previewImage.src = "https://via.placeholder.com/300x400/008080/FFFFFF?text=User+Photo";
+                uploadArea.style.display = 'none';
+                uploadPreview.style.display = 'block';
+            });
+            
+            changePhotoBtn.addEventListener('click', function() {
+                uploadArea.style.display = 'block';
+                uploadPreview.style.display = 'none';
+            });
+            
+            // Style selection functionality
+            const styleOptions = document.querySelectorAll('.style-option');
+            styleOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    styleOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
